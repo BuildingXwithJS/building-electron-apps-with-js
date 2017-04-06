@@ -17,8 +17,12 @@
     "babel-register": "^6.24.0",
     "electron": "^1.6.2",
     "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
     "eslint-config-prettier": "^1.5.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
+    "eslint-plugin-react": "^6.10.3",
     "prettier": "^0.22.0"
   },
   "dependencies": {

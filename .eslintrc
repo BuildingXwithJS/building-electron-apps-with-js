@@ -1,5 +1,8 @@
 {
-  "extends": "prettier",
+  "extends": [
+    "prettier",
+    "airbnb"
+  ],
   "parserOptions": {
     "ecmaVersion": 2016,
     "sourceType": "module",
@@ -10,10 +13,24 @@
   "plugins": ["prettier"],
   "env": {
     "es6": true,
+    "browser": true,
     "node": true
   },
   "rules": {
+    "object-curly-spacing": ["warn", "never"],
     "max-len": ["error", 120, 4],
-    "prettier/prettier": ["error", {"trailingComma": "es5", "singleQuote": true, "bracketSpacing": false}]
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore"
+    }],
+    "react/jsx-filename-extension": "off",
+    "prettier/prettier": ["error", {
+      "trailingComma": "es5",
+      "singleQuote": true,
+      "bracketSpacing": false
+    }]
   }
 }
