@@ -1,4 +1,5 @@
 // npm packages
+import _ from 'lodash';
 import React from 'react';
 import {Observable} from 'rxjs';
 // our packages
@@ -44,7 +45,11 @@ export default class Home extends React.Component {
 
     return (
       <div>
-        {series.map(s => <Series key={s._id} series={s} />)}
+        {_.chunk(series, 4).map((chunk, i) => (
+          <div key={`chunk_${i}`} className="columns">
+            {chunk.map(s => <Series key={s._id} series={s} />)}
+          </div>
+        ))}
       </div>
     );
   }
