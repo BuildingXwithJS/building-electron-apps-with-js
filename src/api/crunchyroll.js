@@ -23,8 +23,8 @@ export const Crunchyroll = {
         // get title & url
         const a = $('a', element);
         const title = a.attr('title');
-        const id = a.attr('href');
-        const url = `${baseURL}${id}`;
+        const _id = a.attr('href');
+        const url = `${baseURL}${_id}`;
         // get image
         const img = $('img', element);
         const image = img.attr('src');
@@ -36,7 +36,7 @@ export const Crunchyroll = {
         );
         // return series data
         return {
-          id,
+          _id,
           source: 'crunchyroll',
           title,
           url,
@@ -60,14 +60,14 @@ export const Crunchyroll = {
     const episodes = $('.group-item', episodesContainer)
       .map((index, el) => {
         const element = $(el);
-        const id = $('a.episode', element).attr('href');
-        const url = `${baseURL}${id}`;
+        const _id = $('a.episode', element).attr('href');
+        const url = `${baseURL}${_id}`;
         const img = $('img', element);
         const image = img.attr('src') || img.attr('data-thumbnailurl');
         const title = $('.series-title', element).text().trim();
         const description = $('.short-desc', element).text().trim();
         return {
-          id,
+          _id,
           url,
           image,
           title,

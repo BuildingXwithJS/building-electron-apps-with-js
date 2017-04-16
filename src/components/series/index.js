@@ -6,7 +6,7 @@ export default withRouter(({series, history}) => {
   const openSeriesPage = () => {
     // but you can use a location instead
     const location = {
-      pathname: `/series${series.id}`,
+      pathname: `/series${series._id}`,
       state: series,
     };
 

@@ -6,7 +6,7 @@ export default withRouter(({episode, history}) => {
   const openEpisodePage = () => {
     // but you can use a location instead
     const location = {
-      pathname: `/episode${episode.id}`,
+      pathname: `/episode${episode._id}`,
       state: episode,
     };
 
