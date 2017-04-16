@@ -52,10 +52,8 @@ export const Crunchyroll = {
     return series;
   },
   async getEpisodes(series) {
-    console.log('gettin episodes for:', series);
     // load episodes
     const {data} = await axios.get(series.url);
-    console.log(data);
     // create cheerio cursor
     const $ = cheerio.load(data);
     const episodesContainer = $('.list-of-seasons ul.portrait-grid');
@@ -65,9 +63,7 @@ export const Crunchyroll = {
         const id = $('a.episode', element).attr('href');
         const url = `${baseURL}${id}`;
         const img = $('img', element);
-        console.log(img.parent().html());
         const image = img.attr('src') || img.attr('data-thumbnailurl');
-        console.log(img.attr('srt'), img.attr('data-thumbnailurl'), image);
         const title = $('.series-title', element).text().trim();
         const description = $('.short-desc', element).text().trim();
         return {
