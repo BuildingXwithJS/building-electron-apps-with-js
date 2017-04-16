@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import React from 'react';
 import {Observable} from 'rxjs';
+import {Link} from 'react-router-dom';
 // our packages
 import db from '../db';
 import {Crunchyroll} from '../api';
@@ -34,10 +35,7 @@ export default class Series extends React.Component {
       .map(change => change.doc)
       .scan((acc, doc) => acc.concat([doc]), [])
       .debounceTime(1000)
-      .subscribe(episodes => {
-        console.log(episodes);
-        this.setState({episodes});
-      });
+      .subscribe(episodes => this.setState({episodes}));
   }
 
   componentWillUnmount() {
@@ -49,6 +47,19 @@ export default class Series extends React.Component {
 
     return (
       <div>
+        <nav className="nav">
+          <div className="nav-left nav-menu">
+            <div className="nav-item">
+              <Link to="/" className=" button">
+                <span className="icon">
+                  <i className="fa fa-arrow-left" />
+                </span>
+                <span>Back</span>
+              </Link>
+            </div>
+          </div>
+        </nav>
+
         {_.chunk(episodes, 4).map((chunk, i) => (
           <div key={`chunk_${i}`} className="columns">
             {chunk.map(ep => <Episode key={ep._id} episode={ep} />)}
