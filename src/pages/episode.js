@@ -1,6 +1,7 @@
 // npm packages
 import _ from 'lodash';
 import React from 'react';
+import videojs from 'video.js';
 import {Link} from 'react-router-dom';
 // our packages
 import {Crunchyroll} from '../api';
@@ -11,19 +12,44 @@ export default class Series extends React.Component {
 
     this.state = {
       episode: null,
+      filename: null,
     };
 
     // trigger episode loading
+    this.init(props);
+  }
+
+  async init(props) {
     const {location} = props;
-    Crunchyroll.getEpisode(location.state);
+    const filename = await Crunchyroll.getEpisode(location.state);
+    this.setState({
+      episode: location.state,
+      filename,
+    });
+  }
+
+  componentDidUpdate() {
+    const {episode, filename} = this.state;
+
+    if (!episode || !filename) {
+      return;
+    }
+
+    videojs('video');
   }
 
   render() {
-    const {episode} = this.state;
+    const {episode, filename} = this.state;
+
+    if (!episode || !filename) {
+      return <div>Loading...</div>;
+    }
 
     return (
       <div>
-        episode video here
+        <video id="video" className="video-js" controls autoPlay preload="auto">
+          <source src={filename} type="video/mp4" />
+        </video>
       </div>
     );
   }

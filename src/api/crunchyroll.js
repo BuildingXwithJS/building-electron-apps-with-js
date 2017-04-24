@@ -1,9 +1,9 @@
 // npm packages
+import fs from 'fs';
+import path from 'path';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import electron from 'electron';
-import path from 'path';
-import fs from 'fs';
 import {spawn} from 'child_process';
 
 // our packages
@@ -95,14 +95,24 @@ export const Crunchyroll = {
     return episodes;
   },
   getEpisode(episode) {
-    console.log('loading episode:', episode);
-    const dl = spawn('youtube-dl', [episode.url], {cwd: targetFolder});
-    dl.stdout.on('data', data => {
-      console.log('youtube-dl data:', data.toString());
-    });
-
-    dl.stderr.on('data', data => {
-      console.log('youtubeld stderr:', data.toString());
+    return new Promise((resolve, reject) => {
+      console.log('loading episode:', episode);
+      const filename = `${episode._id
+        .replace(/^\//g, '')
+        .replace(/\//g, '-')}.mp4`;
+      const dl = spawn(
+        'youtube-dl',
+        ['--write-sub', '--sub-lang', 'enUS', '-o', filename, episode.url],
+        {
+          cwd: targetFolder,
+        }
+      );
+      dl.stderr.on('data', data => {
+        console.log(data.toString());
+      });
+      dl.stdout.on('close', () => {
+        resolve(path.join(targetFolder, filename));
+      });
     });
   },
   getMySeries() {},
