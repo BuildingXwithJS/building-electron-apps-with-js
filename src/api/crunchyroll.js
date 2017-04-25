@@ -85,6 +85,7 @@ export default {
           image,
           title,
           description,
+          series: series._id,
         };
       })
       .get();
