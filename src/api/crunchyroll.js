@@ -22,7 +22,7 @@ try {
 console.log('Using target folder:', targetFolder);
 
 // main module
-export const Crunchyroll = {
+export default {
   async getAllSeries(page = 0) {
     // load catalogue
     const {data} = await axios.get(
@@ -95,19 +95,15 @@ export const Crunchyroll = {
     return episodes;
   },
   async getEpisode(episode) {
-    console.log('loading episode:', episode);
     const filename = `${episode._id
       .replace(/^\//g, '')
       .replace(/\//g, '-')}.mp4`;
-
     const subtitles = await downloadSubtitles({
       url: episode.url,
       targetFolder,
       filename,
     });
-    console.log('got subs:', subtitles);
     const url = await getStreamUrl(episode.url);
-    console.log('got url:', url);
     const type = 'application/x-mpegURL';
 
     return {type, url, subtitles};

@@ -1,7 +1,7 @@
 {
   "extends": [
-    "prettier",
-    "airbnb"
+    "airbnb",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaVersion": 2017,
@@ -16,7 +16,11 @@
     "browser": true,
     "node": true
   },
+  "globals": {
+    "videojs": true
+  },
   "rules": {
+    "no-underscore-dangle": "off",
     "object-curly-spacing": ["warn", "never"],
     "max-len": ["error", 120, 4],
     "comma-dangle": ["error", {

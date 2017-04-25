@@ -1,5 +1,4 @@
 // npm packages
-import _ from 'lodash';
 import React from 'react';
 import {Link} from 'react-router-dom';
 // our packages

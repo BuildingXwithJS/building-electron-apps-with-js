@@ -4,7 +4,7 @@ import {spawn} from 'child_process';
 export const downloadSubtitles = (
   {lang = 'enUS', filename, url, targetFolder} = {}
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     const dl = spawn(
       'youtube-dl',
       [
@@ -28,7 +28,7 @@ export const downloadSubtitles = (
   });
 
 export const getStreamUrl = url =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     const dl = spawn('youtube-dl', ['-g', url]);
     dl.stdout.on('data', data => resolve(data.toString().trim()));
   });
