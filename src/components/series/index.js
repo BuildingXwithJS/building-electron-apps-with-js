@@ -2,13 +2,26 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 
+// our packages
+import db from '../../db';
+
 export default withRouter(({series, history}) => {
-  const openSeriesPage = () => {
+  const openSeriesPage = async () => {
     // but you can use a location instead
     const location = {
       pathname: `/series${series._id}`,
       state: series,
     };
+
+    const doc = await db.current.get('series');
+    const update = {
+      _id: 'series',
+      data: series,
+    };
+    if (doc) {
+      update._rev = doc._rev;
+    }
+    await db.current.put(update);
 
     history.push(location);
   };

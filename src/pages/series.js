@@ -18,13 +18,11 @@ export default class Series extends React.Component {
     };
 
     // trigger episodes loading
-    const {location} = props;
-    Crunchyroll.getEpisodes(location.state);
+    this.init(props);
   }
 
-  componentDidMount() {
-    const {location} = this.props;
-    const series = location.state;
+  async componentDidMount() {
+    const series = await this.getSeries(this.props);
 
     this.sub = Observable.fromEvent(
       db.episodes.changes({
@@ -44,6 +42,21 @@ export default class Series extends React.Component {
 
   componentWillUnmount() {
     this.sub.unsubscribe();
+  }
+
+  async getSeries(props) {
+    const {location} = props;
+    let series = location.state;
+    if (!series) {
+      const {data} = await db.current.get('series');
+      series = data;
+    }
+    return series;
+  }
+
+  async init(props) {
+    const series = await this.getSeries(props);
+    Crunchyroll.getEpisodes(series);
   }
 
   render() {

@@ -44,16 +44,34 @@ export default class Series extends React.Component {
 
   render() {
     const {episode, file} = this.state;
+    const {history} = this.props;
 
-    if (!episode || !file) {
-      return <div>Loading...</div>;
+    let body = <div>Loading...</div>;
+
+    if (episode && file) {
+      body = (
+        <video id="video" className="video-js" controls autoPlay preload="auto">
+          <source src={file.url} type={file.type} />
+        </video>
+      );
     }
 
     return (
       <div>
-        <video id="video" className="video-js" controls autoPlay preload="auto">
-          <source src={file.url} type={file.type} />
-        </video>
+        <nav className="nav">
+          <div className="nav-left nav-menu">
+            <div className="nav-item">
+              <a href="#back" className="button" onClick={() => history.goBack()}>
+                <span className="icon">
+                  <i className="fa fa-arrow-left" />
+                </span>
+                <span>Back</span>
+              </a>
+            </div>
+          </div>
+        </nav>
+
+        {body}
       </div>
     );
   }
