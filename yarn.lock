@@ -16,6 +16,12 @@ acorn@^5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.0.3.tgz#c460df08491463f028ccb82eab3730bf01087b3d"
 
+aes-decrypter@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/aes-decrypter/-/aes-decrypter-1.0.3.tgz#9c06b8a5435a5ad09db933f8a014afcf184cc34e"
+  dependencies:
+    pkcs7 "^0.2.3"
+
 ajv-keywords@^1.0.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.5.1.tgz#314dd0a4b3368fad3dfcdc54ede6171b886daf3c"
@@ -1453,7 +1459,7 @@ glob@7.1.1, glob@^7.0.0, glob@^7.0.3, glob@^7.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-global@4.3.0, global@~4.3.0:
+global@4.3.0, global@^4.3.0, global@~4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/global/-/global-4.3.0.tgz#ef7ec4beead579b454f5ebd5e7f303db54f42a2b"
   dependencies:
@@ -1851,6 +1857,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+libjass@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/libjass/-/libjass-0.11.0.tgz#bff1f464a2428c3bddfb68e4503b2d52afe3d6e6"
+
 lie@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.0.tgz#65e0139eaef9ae791a1f5c8c53692c8d3b4718f4"
@@ -1936,6 +1946,10 @@ loud-rejection@^1.0.0:
     currently-unhandled "^0.4.1"
     signal-exit "^3.0.0"
 
+m3u8-parser@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/m3u8-parser/-/m3u8-parser-2.1.0.tgz#c8170329ec1cd515d0d58bb8b762da9896cb0368"
+
 map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
@@ -2008,6 +2022,10 @@ ms@0.7.2:
 mute-stream@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
+
+mux.js@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/mux.js/-/mux.js-4.1.2.tgz#cf318048a7ff61453beb5913f01d12fb9b6f3a42"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -2170,6 +2188,10 @@ pinkie-promise@^2.0.0:
 pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
+
+pkcs7@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/pkcs7/-/pkcs7-0.2.3.tgz#22d60666d01065c5f24439098e4a4830452273be"
 
 pkg-dir@^1.0.0:
   version "1.0.0"
@@ -2759,6 +2781,10 @@ ua-parser-js@^0.7.9:
   version "0.7.12"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
+url-toolkit@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/url-toolkit/-/url-toolkit-1.0.9.tgz#6647c84f931c54e1e61fa3b33e10ad34161ed4d9"
+
 user-home@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/user-home/-/user-home-2.0.0.tgz#9c70bfd8169bc1dcbf48604e0f04b8b49cde9e9f"
@@ -2790,7 +2816,7 @@ verror@1.3.6:
   dependencies:
     extsprintf "1.0.2"
 
-video.js@^5.19.2:
+video.js@^5.17.0, video.js@^5.19.1, video.js@^5.19.2:
   version "5.19.2"
   resolved "https://registry.yarnpkg.com/video.js/-/video.js-5.19.2.tgz#849d6b1e5fc2cb23ea7b17cd79b25800f61d87e5"
   dependencies:
@@ -2803,6 +2829,34 @@ video.js@^5.19.2:
     videojs-swf "5.3.0"
     videojs-vtt.js "0.12.3"
     xhr "2.2.2"
+
+videojs-ass@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/videojs-ass/-/videojs-ass-0.6.3.tgz#37221b2a5a5f7f9b1b322d8367b74b694192c4af"
+  dependencies:
+    libjass "0.11.0"
+
+videojs-contrib-hls@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/videojs-contrib-hls/-/videojs-contrib-hls-5.4.1.tgz#63eee21b8467ed914d041f27950944c397bf8814"
+  dependencies:
+    aes-decrypter "1.0.3"
+    global "^4.3.0"
+    m3u8-parser "2.1.0"
+    mux.js "4.1.2"
+    url-toolkit "1.0.9"
+    video.js "^5.19.1"
+    videojs-contrib-media-sources "4.4.3"
+    webworkify "1.0.2"
+
+videojs-contrib-media-sources@4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/videojs-contrib-media-sources/-/videojs-contrib-media-sources-4.4.3.tgz#a6fee79c4fb0ff225eb85fcc0a4e7bd34d8c2070"
+  dependencies:
+    global "^4.3.0"
+    mux.js "4.1.2"
+    video.js "^5.17.0"
+    webworkify "1.0.2"
 
 videojs-font@2.0.0:
   version "2.0.0"
@@ -2831,6 +2885,10 @@ warning@^3.0.0:
   resolved "https://registry.yarnpkg.com/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
   dependencies:
     loose-envify "^1.0.0"
+
+webworkify@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/webworkify/-/webworkify-1.0.2.tgz#b616a95a6225249bf25a91e96e0942c665155995"
 
 whatwg-fetch@>=0.10.0:
   version "2.0.3"

@@ -1,7 +1,6 @@
 // npm packages
 import _ from 'lodash';
 import React from 'react';
-import videojs from 'video.js';
 import {Link} from 'react-router-dom';
 // our packages
 import {Crunchyroll} from '../api';
@@ -12,43 +11,49 @@ export default class Series extends React.Component {
 
     this.state = {
       episode: null,
-      filename: null,
+      file: null,
     };
 
     // trigger episode loading
     this.init(props);
   }
 
-  async init(props) {
-    const {location} = props;
-    const filename = await Crunchyroll.getEpisode(location.state);
-    this.setState({
-      episode: location.state,
-      filename,
-    });
-  }
-
   componentDidUpdate() {
-    const {episode, filename} = this.state;
+    const {episode, file} = this.state;
 
-    if (!episode || !filename) {
+    if (!episode || !file) {
       return;
     }
 
-    videojs('video');
+    videojs('video', {
+      plugins: {
+        ass: {
+          src: file.subtitles,
+        },
+      },
+    });
+  }
+
+  async init(props) {
+    const {location} = props;
+    const file = await Crunchyroll.getEpisode(location.state);
+    this.setState({
+      episode: location.state,
+      file,
+    });
   }
 
   render() {
-    const {episode, filename} = this.state;
+    const {episode, file} = this.state;
 
-    if (!episode || !filename) {
+    if (!episode || !file) {
       return <div>Loading...</div>;
     }
 
     return (
       <div>
         <video id="video" className="video-js" controls autoPlay preload="auto">
-          <source src={filename} type="video/mp4" />
+          <source src={file.url} type={file.type} />
         </video>
       </div>
     );
