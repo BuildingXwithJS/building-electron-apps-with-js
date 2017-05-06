@@ -6,6 +6,7 @@ import cheerio from 'cheerio';
 import querystring from 'querystring';
 import {M3U} from 'playlist-parser';
 import electron from 'electron';
+import React from 'react';
 
 // our packages
 import db from '../../db';
@@ -15,18 +16,71 @@ import bytesToAss from './subtitles/ass';
 
 // base URL used for most requests
 const baseURL = 'http://www.crunchyroll.com';
-// folder for videos
-const userDataPath = (electron.app || electron.remote.app).getPath('userData');
-const targetFolder = path.join(userDataPath, 'crunchyroll');
-try {
-  fs.accessSync(targetFolder);
-} catch (e) {
-  fs.mkdirSync(targetFolder);
-}
-console.log('Using target folder:', targetFolder);
 
 // main module
-export default {
+class Crunchyroll {
+  constructor() {
+    this.authCookies = null;
+
+    this.init();
+  }
+
+  async init() {
+    // load auth parameters
+    try {
+      this.authCookies = await db.auth.get('crunchyroll');
+    } catch (e) {
+      if (e.name === 'not_found') {
+        this.authCookies = null;
+      }
+    }
+    console.log('auth cookies:', this.authCookies);
+  }
+
+  auth() {
+    if (this.authCookies !== null) {
+      console.log('already authorized:', this.authCookies);
+      return;
+    }
+
+    // create new electron browser window
+    const remote = electron.remote;
+    const BrowserWindow = remote.BrowserWindow;
+    let win = new BrowserWindow({width: 800, height: 600});
+    // cleanup on close
+    win.on('closed', () => {
+      win = null;
+    });
+    // wait for page to finish loading
+    win.webContents.on('did-finish-load', () => {
+      // if auth was succesful
+      if (win.webContents.getURL() === 'http://www.crunchyroll.com/') {
+        // get all cookies
+        win.webContents.session.cookies.get({}, async (error, cookies) => {
+          if (error) {
+            console.error('Error getting cookies:', error);
+            return;
+          }
+
+          // store cookies
+          this.authCookies = cookies;
+          await db.auth.put({_id: 'crunchyroll', cookies});
+          console.log('saved cookies', cookies);
+
+          // close window
+          win.close();
+        });
+      }
+    });
+    // Load a crunchyroll login page
+    win.loadURL(`${baseURL}/login?next=%2F`);
+  }
+
+  async logout() {
+    await db.auth.remove(this.authCookies);
+    this.authCookies = null;
+  }
+
   async getAllSeries(page = 0) {
     // load catalogue
     const {data} = await axios.get(
@@ -67,7 +121,8 @@ export default {
     await db.series.bulkDocs(series);
 
     return series;
-  },
+  }
+
   async getEpisodes(series) {
     // load episodes
     const {data} = await axios.get(series.url);
@@ -98,7 +153,8 @@ export default {
     await db.episodes.bulkDocs(episodes);
 
     return episodes;
-  },
+  }
+
   async getEpisode(episode) {
     // load episode page
     const {data} = await axios.get(episode.url);
@@ -167,7 +223,45 @@ export default {
     const type = 'application/x-mpegURL';
 
     return {type, url, subtitles};
-  },
-  getMySeries() {},
-  search(query) {},
-};
+  }
+
+  getMySeries() {}
+  search(query) {}
+
+  drawSettings() {
+    const loggedIn = this.authCookies !== null;
+
+    return (
+      <div className="card">
+        <header className="card-header">
+          <p className="card-header-title">
+            Crunchyroll
+          </p>
+        </header>
+        <div className="card-content">
+          Crunchyroll settings card.
+        </div>
+        <footer className="card-footer">
+          {loggedIn
+            ? <a
+                className="card-footer-item"
+                href="#crlogout"
+                onClick={() => this.logout()}
+              >
+                Logout
+              </a>
+            : <a
+                className="card-footer-item"
+                href="#crlogin"
+                onClick={() => this.auth()}
+              >
+                Login
+              </a>}
+        </footer>
+
+      </div>
+    );
+  }
+}
+
+export default new Crunchyroll();

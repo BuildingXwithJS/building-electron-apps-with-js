@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import React from 'react';
 import {Observable} from 'rxjs';
+import {Link} from 'react-router-dom';
 // our packages
 import db from '../db';
 import {Crunchyroll} from '../api';
@@ -18,7 +19,6 @@ export default class Home extends React.Component {
 
     // trigger list update
     Crunchyroll.getAllSeries();
-    // Crunchyroll.getEpisode({url: 'http://www.crunchyroll.com/boruto-naruto-next-generations/episode-4-a-ninjutsu-battle-of-the-sexes-732529'})
   }
 
   componentDidMount() {
@@ -46,6 +46,19 @@ export default class Home extends React.Component {
 
     return (
       <div>
+        <nav className="nav">
+          <div className="nav-right nav-menu">
+            <div className="nav-item">
+              <Link to="/settings" className="button">
+                <span className="icon">
+                  <i className="fa fa-cog" />
+                </span>
+                <span>Settings</span>
+              </Link>
+            </div>
+          </div>
+        </nav>
+
         {_.chunk(series, 4).map((chunk, i) => (
           <div key={`chunk_${i}`} className="columns">
             {chunk.map(s => <Series key={s._id} series={s} />)}
