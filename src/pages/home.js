@@ -18,6 +18,7 @@ export default class Home extends React.Component {
 
     // trigger list update
     Crunchyroll.getAllSeries();
+    // Crunchyroll.getEpisode({url: 'http://www.crunchyroll.com/boruto-naruto-next-generations/episode-4-a-ninjutsu-battle-of-the-sexes-732529'})
   }
 
   componentDidMount() {
