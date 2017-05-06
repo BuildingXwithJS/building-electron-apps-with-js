@@ -1933,7 +1933,7 @@ lodash.some@^4.4.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.some/-/lodash.some-4.6.0.tgz#1bb9f314ef6b8baded13b549169b2a945eb68e4d"
 
-lodash@^4.0.0, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -2451,7 +2451,20 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.45.0:
+request-promise-core@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.1.tgz#3eee00b2c5aa83239cfb04c5700da36f81cd08b6"
+  dependencies:
+    lodash "^4.13.1"
+
+request-promise-native@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.3.tgz#9cb2b2f69f137e4acf35116a08a441cbfd0c0134"
+  dependencies:
+    request-promise-core "1.1.1"
+    stealthy-require "^1.0.0"
+
+request@^2.45.0, request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -2646,6 +2659,10 @@ sshpk@^1.7.0:
     jodid25519 "^1.0.0"
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
+
+stealthy-require@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.0.tgz#ca61cf38766158ea819a0a1b0070b35de957f9b0"
 
 string-width@^1.0.1:
   version "1.0.2"
