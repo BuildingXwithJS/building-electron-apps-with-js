@@ -292,7 +292,45 @@ class Crunchyroll {
   async search(query) {
     await this.isInited;
 
-    return false;
+    // clear old search results
+    const oldDocs = await db.search.allDocs();
+    await Promise.all(
+      oldDocs.rows.map(row => db.search.remove(row.id, row.value.rev))
+    );
+
+    const jar = request.jar();
+    // force english language
+    jar.setCookie(request.cookie(`c_locale=enUS`), baseURL);
+
+    // load search catalogue
+    const body = await request({
+      url: `${baseURL}/ajax/?req=RpcApiSearch_GetSearchCandidates`,
+      jar,
+    });
+
+    // parse json
+    const lines = body.split('\n');
+    const dataJson = lines[1];
+    const data = JSON.parse(dataJson);
+
+    // filter series
+    const series = data.data.filter(it => it.type === 'Series');
+    // find matches
+    const matches = series
+      .filter(it => it.name.toLowerCase().includes(query.toLowerCase()))
+      .map(it => ({
+        _id: it.link,
+        source: 'crunchyroll',
+        title: it.name,
+        url: `${baseURL}${it.link}`,
+        image: it.img,
+        count: '',
+      }));
+
+    // store into search db
+    await db.search.bulkDocs(matches);
+
+    return matches;
   }
 
   drawSettings() {
