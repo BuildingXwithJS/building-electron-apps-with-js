@@ -1,12 +1,9 @@
 // npm packages
-import fs from 'fs';
-import path from 'path';
+import React from 'react';
 import request from 'request-promise-native';
 import cheerio from 'cheerio';
-import querystring from 'querystring';
 import {M3U} from 'playlist-parser';
 import electron from 'electron';
-import React from 'react';
 
 // our packages
 import db from '../../db';
@@ -24,10 +21,14 @@ class Crunchyroll {
   constructor() {
     this.authCookies = null;
 
-    this.init();
+    this.isInited = this.init();
   }
 
   async init() {
+    if (this.authCookies) {
+      return;
+    }
+
     // load auth parameters
     try {
       this.authCookies = await db.auth.get('crunchyroll');
@@ -36,12 +37,11 @@ class Crunchyroll {
         this.authCookies = null;
       }
     }
-    console.log('auth cookies:', this.authCookies);
   }
 
   auth() {
     if (this.authCookies !== null) {
-      console.log('already authorized:', this.authCookies);
+      // console.log('already authorized:', this.authCookies);
       return;
     }
 
@@ -68,7 +68,6 @@ class Crunchyroll {
           this.authCookies = cookies.filter(c =>
             c.domain.includes('crunchyroll.com'));
           await db.auth.put({_id: 'crunchyroll', cookies: this.authCookies});
-          console.log('saved cookies', this.authCookies);
 
           // close window
           win.close();
@@ -85,6 +84,8 @@ class Crunchyroll {
   }
 
   async getAllSeries(page = 0) {
+    await this.isInited;
+
     // load catalogue
     const data = await request(
       `${baseURL}/videos/anime/popular/ajax_page?pg=${page}`
@@ -127,6 +128,8 @@ class Crunchyroll {
   }
 
   async getEpisodes(series) {
+    await this.isInited;
+
     // load episodes
     const data = await request(series.url);
     // create cheerio cursor
@@ -159,6 +162,8 @@ class Crunchyroll {
   }
 
   async getEpisode(episode) {
+    await this.isInited;
+
     // load episode page
     const data = await request(episode.url);
     // load into cheerio
@@ -230,6 +235,8 @@ class Crunchyroll {
   }
 
   async getMySeries() {
+    await this.isInited;
+
     if (this.authCookies === null) {
       await sleep(10);
       return this.getMySeries();
@@ -253,31 +260,40 @@ class Crunchyroll {
     // load into cheerio
     const $ = cheerio.load(data);
     const mainContent = $('#main_content');
-    const items = $('li.queue-item', mainContent).map((index, el) => {
-      const element = $(el);
-      const epLink = $('a.episode', element);
-      const episodeTitle = epLink.attr('title');
-      const episodeUrl = epLink.attr('href');
-      const episodeImage = $('img.landscape', element).attr('src');
-      const episodeDescription = $('.short-desc', element).text().trim();
-      const seriesTitle = $('.series-title', element).text().trim();
-      const seriesUrl = $('div.queue-controls > a.left', element).attr('href');
+    const items = $('li.queue-item', mainContent)
+      .map((index, el) => {
+        const element = $(el);
+        const epLink = $('a.episode', element);
+        const episodeTitle = epLink.attr('title');
+        const episodeUrl = epLink.attr('href');
+        const episodeImage = $('img.landscape', element).attr('src');
+        const episodeDescription = $('.short-desc', element).text().trim();
+        const seriesTitle = $('.series-title', element).text().trim();
+        const seriesUrl = $('div.queue-controls > a.left', element).attr(
+          'href'
+        );
 
-      return {
-        episodeTitle,
-        episodeImage,
-        episodeUrl,
-        episodeDescription,
-        seriesTitle,
-        seriesUrl,
-      };
-    }).toArray();
+        return {
+          episodeTitle,
+          episodeImage,
+          episodeUrl,
+          episodeDescription,
+          seriesTitle,
+          seriesUrl,
+        };
+      })
+      .toArray();
 
     await db.bookmarkSeries.bulkDocs(items);
-    console.log('saved items:', items);
+
+    return items;
   }
 
-  search(query) {}
+  async search(query) {
+    await this.isInited;
+
+    return false;
+  }
 
   drawSettings() {
     const loggedIn = this.authCookies !== null;
