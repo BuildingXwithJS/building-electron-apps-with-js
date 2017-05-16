@@ -65,8 +65,7 @@ class Crunchyroll {
           }
 
           // store cookies
-          this.authCookies = cookies.filter(c =>
-            c.domain.includes('crunchyroll.com'));
+          this.authCookies = cookies.filter(c => c.domain.includes('crunchyroll.com'));
           await db.auth.put({_id: 'crunchyroll', cookies: this.authCookies});
 
           // close window
@@ -87,9 +86,7 @@ class Crunchyroll {
     await this.isInited;
 
     // load catalogue
-    const data = await request(
-      `${baseURL}/videos/anime/popular/ajax_page?pg=${page}`
-    );
+    const data = await request(`${baseURL}/videos/anime/popular/ajax_page?pg=${page}`);
     // create cheerio cursor
     const $ = cheerio.load(data);
     const series = $('li.group-item')
@@ -105,10 +102,7 @@ class Crunchyroll {
         const image = img.attr('src');
         // get videos count
         const seriesData = $('.series-data', element);
-        const count = parseInt(
-          seriesData.text().trim().replace('Videos', '').trim(),
-          10
-        );
+        const count = parseInt(seriesData.text().trim().replace('Videos', '').trim(), 10);
         // return series data
         return {
           _id,
@@ -211,10 +205,7 @@ class Crunchyroll {
     const playlist = M3U.parse(streamFileData);
 
     // get subtitles
-    const englishSubs = subtitlesInfo
-      .map(s => s.$)
-      .filter(s => s.title.includes('English'))
-      .pop();
+    const englishSubs = subtitlesInfo.map(s => s.$).filter(s => s.title.includes('English')).pop();
     const subData = await request(englishSubs.link);
     const subsObj = await parseXml(subData);
     const subsId = parseInt(subsObj.subtitle.$.id, 10);
@@ -269,9 +260,7 @@ class Crunchyroll {
         const episodeImage = $('img.landscape', element).attr('src');
         const episodeDescription = $('.short-desc', element).text().trim();
         const seriesTitle = $('.series-title', element).text().trim();
-        const seriesUrl = $('div.queue-controls > a.left', element).attr(
-          'href'
-        );
+        const seriesUrl = $('div.queue-controls > a.left', element).attr('href');
 
         return {
           episodeTitle,
@@ -294,9 +283,7 @@ class Crunchyroll {
 
     // clear old search results
     const oldDocs = await db.search.allDocs();
-    await Promise.all(
-      oldDocs.rows.map(row => db.search.remove(row.id, row.value.rev))
-    );
+    await Promise.all(oldDocs.rows.map(row => db.search.remove(row.id, row.value.rev)));
 
     const jar = request.jar();
     // force english language
@@ -316,16 +303,14 @@ class Crunchyroll {
     // filter series
     const series = data.data.filter(it => it.type === 'Series');
     // find matches
-    const matches = series
-      .filter(it => it.name.toLowerCase().includes(query.toLowerCase()))
-      .map(it => ({
-        _id: it.link,
-        source: 'crunchyroll',
-        title: it.name,
-        url: `${baseURL}${it.link}`,
-        image: it.img,
-        count: '',
-      }));
+    const matches = series.filter(it => it.name.toLowerCase().includes(query.toLowerCase())).map(it => ({
+      _id: it.link,
+      source: 'crunchyroll',
+      title: it.name,
+      url: `${baseURL}${it.link}`,
+      image: it.img,
+      count: '',
+    }));
 
     // store into search db
     await db.search.bulkDocs(matches);
@@ -348,18 +333,10 @@ class Crunchyroll {
         </div>
         <footer className="card-footer">
           {loggedIn
-            ? <a
-                className="card-footer-item"
-                href="#crlogout"
-                onClick={() => this.logout()}
-              >
+            ? <a className="card-footer-item" href="#crlogout" onClick={() => this.logout()}>
                 Logout
               </a>
-            : <a
-                className="card-footer-item"
-                href="#crlogin"
-                onClick={() => this.auth()}
-              >
+            : <a className="card-footer-item" href="#crlogin" onClick={() => this.auth()}>
                 Login
               </a>}
         </footer>

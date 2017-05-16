@@ -20,13 +20,14 @@ const decrypt = (id, iv, data) => {
 /**
  * Decompresses the data.
  */
-const decompress = (data) => new Promise((resolve, reject) => {
-  try {
-    zlib.inflate(data, (err, res) => err ? reject(err) : resolve(res));
-  } catch (e) {
-    resolve(data);
-  }
-});
+const decompress = data =>
+  new Promise((resolve, reject) => {
+    try {
+      zlib.inflate(data, (err, res) => err ? reject(err) : resolve(res));
+    } catch (e) {
+      resolve(data);
+    }
+  });
 
 /**
  * Generates a secret string based on a Fibonacci sequence.
