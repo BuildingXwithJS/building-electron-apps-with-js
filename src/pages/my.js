@@ -7,7 +7,7 @@ import db from '../db';
 import {Crunchyroll} from '../api';
 // our components
 import Navbar from '../components/navbar';
-import BookmarkEpisode from '../components/bookmarkEpisode';
+import Series from '../components/series';
 
 export default class MyStuff extends React.Component {
   constructor() {
@@ -23,7 +23,7 @@ export default class MyStuff extends React.Component {
 
   componentDidMount() {
     this.sub = Observable.fromEvent(
-      db.bookmarkSeries.changes({
+      db.series.changes({
         since: 0,
         live: true,
         include_docs: true,
@@ -32,6 +32,7 @@ export default class MyStuff extends React.Component {
     )
       .filter(change => !change.deleted)
       .map(change => change.doc)
+      .filter(doc => doc.bookmarked)
       .scan((acc, doc) => acc.concat([doc]), [])
       .debounceTime(1000)
       .subscribe(series => this.setState({series}));
@@ -48,9 +49,11 @@ export default class MyStuff extends React.Component {
       <div>
         <Navbar />
 
-        <div>
-          {series.map(s => <BookmarkEpisode key={s._id} episode={s} />)}
-        </div>
+        {_.chunk(series, 4).map((chunk, i) => (
+          <div key={`chunk_${i}`} className="tile is-ancestor">
+            {chunk.map(s => <Series key={s._id} series={s} />)}
+          </div>
+        ))}
       </div>
     );
   }

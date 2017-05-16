@@ -49,7 +49,7 @@ export default class Home extends React.Component {
         <Navbar />
 
         {_.chunk(series, 4).map((chunk, i) => (
-          <div key={`chunk_${i}`} className="columns">
+          <div key={`chunk_${i}`} className="tile is-ancestor">
             {chunk.map(s => <Series key={s._id} series={s} />)}
           </div>
         ))}

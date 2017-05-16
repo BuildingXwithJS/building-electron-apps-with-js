@@ -10,6 +10,7 @@ import db from '../../db';
 import parseXml from './parseXml';
 import decode from './subtitles';
 import bytesToAss from './subtitles/ass';
+import getSeries from './getSeries';
 
 // base URL used for most requests
 const baseURL = 'http://www.crunchyroll.com';
@@ -128,7 +129,7 @@ class Crunchyroll {
     const data = await request(series.url);
     // create cheerio cursor
     const $ = cheerio.load(data);
-    const episodesContainer = $('.list-of-seasons ul.portrait-grid');
+    const episodesContainer = $('.list-of-seasons');
     const episodes = $('.group-item', episodesContainer)
       .map((index, el) => {
         const element = $(el);
@@ -256,16 +257,21 @@ class Crunchyroll {
         const element = $(el);
         const epLink = $('a.episode', element);
         const episodeTitle = epLink.attr('title');
-        const episodeUrl = epLink.attr('href');
         const episodeImage = $('img.landscape', element).attr('src');
         const episodeDescription = $('.short-desc', element).text().trim();
         const seriesTitle = $('.series-title', element).text().trim();
         const seriesUrl = $('div.queue-controls > a.left', element).attr('href');
 
+        const link = epLink.attr('href');
+        const linkParts = link.split('?');
+        const episodeUrl = linkParts[0];
+        const episodeTime = linkParts[1].replace('t=', '');
+
         return {
           episodeTitle,
           episodeImage,
           episodeUrl,
+          episodeTime,
           episodeDescription,
           seriesTitle,
           seriesUrl,
@@ -273,7 +279,23 @@ class Crunchyroll {
       })
       .toArray();
 
-    await db.bookmarkSeries.bulkDocs(items);
+    const newSeries = [];
+
+    for (let item of items) {
+      // mark series as bookmarked or create a new one
+      try {
+        const series = await db.series.get(item.seriesUrl);
+        if (!series.bookmarked) {
+          await db.series.put(Object.assign(series, {bookmarked: true}));
+        }
+      } catch (e) {
+        // if series not found - get full info, then save to db
+        const series = await getSeries(item.seriesUrl);
+        newSeries.push(series);
+      }
+    }
+
+    await db.series.bulkDocs(newSeries);
 
     return items;
   }
