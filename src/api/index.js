@@ -1,3 +1,8 @@
+// plugins
 import Crunchyroll from './crunchyroll';
+import Youtube from './youtube';
 
-export {Crunchyroll};
+// manager
+import PluginManager from './manager';
+
+export default new PluginManager([Crunchyroll, Youtube]);

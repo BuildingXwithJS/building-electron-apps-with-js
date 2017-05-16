@@ -3,7 +3,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 // our packages
-import {Crunchyroll} from '../api';
+import PluginManager from '../api';
 
 export default class Settings extends React.Component {
   constructor() {
@@ -38,7 +38,7 @@ export default class Settings extends React.Component {
 
         <div className="content columns">
           <div className="column">
-            {Crunchyroll.drawSettings()}
+            {PluginManager.drawSettings()}
           </div>
         </div>
       </div>

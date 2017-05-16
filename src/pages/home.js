@@ -4,7 +4,7 @@ import React from 'react';
 import {Observable} from 'rxjs';
 // our packages
 import db from '../db';
-import {Crunchyroll} from '../api';
+import PluginManager from '../api';
 // our components
 import Navbar from '../components/navbar';
 import Series from '../components/series';
@@ -18,7 +18,7 @@ export default class Home extends React.Component {
     };
 
     // trigger list update
-    Crunchyroll.getAllSeries();
+    PluginManager.getAllSeries();
   }
 
   componentDidMount() {

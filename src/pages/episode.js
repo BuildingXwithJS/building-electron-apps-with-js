@@ -2,7 +2,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 // our packages
-import {Crunchyroll} from '../api';
+import PluginManager from '../api';
 
 export default class Series extends React.Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export default class Series extends React.Component {
 
   async init(props) {
     const {location} = props;
-    const file = await Crunchyroll.getEpisode(location.state);
+    const file = await PluginManager.getEpisode(location.state);
     this.setState({
       episode: location.state,
       file,

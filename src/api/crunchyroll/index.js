@@ -21,6 +21,7 @@ const sleep = t => new Promise(r => setTimeout(r, t));
 class Crunchyroll {
   constructor() {
     this.authCookies = null;
+    this.id = 'crunchyroll';
 
     this.isInited = this.init();
   }
@@ -107,7 +108,7 @@ class Crunchyroll {
         // return series data
         return {
           _id,
-          source: 'crunchyroll',
+          source: this.id,
           title,
           url,
           image,
@@ -145,6 +146,7 @@ class Crunchyroll {
           image,
           title,
           description,
+          source: this.id,
           series: series._id,
         };
       })
@@ -327,7 +329,7 @@ class Crunchyroll {
     // find matches
     const matches = series.filter(it => it.name.toLowerCase().includes(query.toLowerCase())).map(it => ({
       _id: it.link,
-      source: 'crunchyroll',
+      source: this.id,
       title: it.name,
       url: `${baseURL}${it.link}`,
       image: it.img,

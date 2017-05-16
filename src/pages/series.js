@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {Link} from 'react-router-dom';
 // our packages
 import db from '../db';
-import {Crunchyroll} from '../api';
+import PluginManager from '../api';
 // our components
 import Episode from '../components/episode';
 
@@ -56,7 +56,7 @@ export default class Series extends React.Component {
 
   async init(props) {
     const series = await this.getSeries(props);
-    Crunchyroll.getEpisodes(series);
+    PluginManager.getEpisodes(series);
   }
 
   render() {
