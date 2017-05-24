@@ -46,7 +46,7 @@ export default withRouter(({series, history}) => {
             <div className="media">
               <div className="media-content">
                 <p className="title is-4">{series.title}</p>
-                <p className="subtitle is-6">Videos count: {series.count}</p>
+                {series.count !== -1 && <p className="subtitle is-6">Videos count: {series.count}</p>}
               </div>
             </div>
           </div>
