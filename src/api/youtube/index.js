@@ -1,5 +1,4 @@
 // npm packages
-import _ from 'lodash';
 import React from 'react';
 import request from 'request-promise-native';
 import cheerio from 'cheerio';
