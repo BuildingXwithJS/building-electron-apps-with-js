@@ -33,6 +33,10 @@ export default class Series extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    videojs('video').dispose();
+  }
+
   async init(props) {
     const {location} = props;
     const file = await PluginManager.getEpisode(location.state);

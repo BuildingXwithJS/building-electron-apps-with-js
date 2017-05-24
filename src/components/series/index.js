@@ -13,15 +13,22 @@ export default withRouter(({series, history}) => {
       state: series,
     };
 
-    const doc = await db.current.get('series');
-    const update = {
-      _id: 'series',
-      data: series,
-    };
-    if (doc) {
-      update._rev = doc._rev;
+    try {
+      const doc = await db.current.get('series');
+      const update = {
+        _id: 'series',
+        data: series,
+      };
+      if (doc) {
+        update._rev = doc._rev;
+      }
+      await db.current.put(update);
+    } catch (e) {
+      // if not found - just put new
+      if (e.status === 404) {
+        await db.current.put({_id: 'series', data: series});
+      }
     }
-    await db.current.put(update);
 
     history.push(location);
   };

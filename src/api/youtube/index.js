@@ -1,4 +1,5 @@
 // npm packages
+import _ from 'lodash';
 import React from 'react';
 import request from 'request-promise-native';
 import cheerio from 'cheerio';
@@ -77,19 +78,66 @@ class Youtube {
   }
 
   async getEpisodes(series) {
-    return {
-      _id: 'other',
-      url: 'asd',
-      image: 'https://img.youtube.com/vi/02Ikb6B55Qc/maxresdefault.jpg',
-      title: 'Test',
-      description: 'Test description',
-      source: this.id,
-      series: series._id,
-    };
+    await this.isInited;
+
+    // load episodes
+    const data = await request(`${series.url}/videos`);
+    // create cheerio cursor
+    const $ = cheerio.load(data);
+    const episodesContainer = $('ul.channels-browse-content-grid');
+    const episodes = $('.channels-content-item', episodesContainer)
+      .map((index, el) => {
+        const element = $(el);
+        const a = $('a.yt-uix-tile-link', element);
+        const _id = a.attr('href');
+        const title = a.attr('title').trim();
+        const url = `${baseURL}${_id}`;
+        const img = $('img', element);
+        const image = img.attr('src');
+        const description = $('.accessible-description', element).text().trim();
+        return {
+          _id,
+          url,
+          image,
+          title,
+          description,
+          source: this.id,
+          series: series._id,
+        };
+      })
+      .get();
+
+    // store in the db
+    await db.episodes.bulkDocs(episodes);
+
+    return episodes;
   }
 
   async getEpisode(episode) {
-    // return {type, url, subtitles};
+    await this.isInited;
+
+    // load episode page
+    const data = await request(episode.url);
+    // load into cheerio
+    const streamsRegex = /"url_encoded_fmt_stream_map":"(.+?)"/gm;
+    const res = streamsRegex.exec(data);
+    if (!res) {
+      throw new Error('Not able to get streams!');
+    }
+
+    const streamsString = decodeURIComponent(res[1]);
+    const streamDataRegex = /url=(.+?)\\.+?type=(.+?);/gm;
+    const stream = streamDataRegex.exec(streamsString);
+
+    if (!stream) {
+      throw new Error('Not able to get streams!');
+    }
+
+    const subtitles = undefined;
+    const url = stream[1];
+    const type = stream[2];
+
+    return {type, url, subtitles};
   }
 
   async getMySeries() {}
