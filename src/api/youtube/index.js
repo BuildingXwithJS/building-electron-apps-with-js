@@ -190,7 +190,73 @@ class Youtube {
     return {type, url, subtitles};
   }
 
-  async getMySeries() {}
+  async getMySeries() {
+    await this.isInited;
+
+    const jar = request.jar();
+    // add auth cookies
+    this.authCookies.cookies.forEach(data => {
+      const cookie = request.cookie(`${data.name}=${data.value}`);
+      jar.setCookie(cookie, `${baseURL}${data.path}`);
+    });
+
+    // load catalogue
+    const data = await request({url: `${baseURL}/feed/subscriptions`, jar});
+    // create cheerio cursor
+    const $ = cheerio.load(data);
+    const fetchedChannels = [];
+    const items = $('li.yt-shelf-grid-item')
+      .map((index, el) => {
+        const element = $(el);
+        // get title & url
+        const a = $('a.g-hovercard', element);
+        const title = a.text();
+        const _id = a.attr('href');
+        const url = `${baseURL}${_id}`;
+        // get image
+        const img = $('img', element);
+        const imageUrl = img.attr('src');
+        const imageThumb = img.attr('data-thumb');
+        const image = imageUrl.startsWith('/yts/img/pixel') ? imageThumb : imageUrl;
+        // make sure we're only showing channel once
+        if (fetchedChannels.indexOf(_id) !== -1) {
+          return undefined;
+        }
+        fetchedChannels.push(_id);
+        // return series data
+        return {
+          _id,
+          source: this.id,
+          title,
+          url,
+          image,
+          bookmarked: true,
+          count: -1,
+        };
+      })
+      .get()
+      .filter(it => it !== undefined);
+
+    const newSeries = [];
+
+    for (let item of items) {
+      // mark series as bookmarked or create a new one
+      try {
+        const series = await db.series.get(item._id);
+        if (!series.bookmarked) {
+          await db.series.put(Object.assign(series, {bookmarked: true}));
+        }
+      } catch (e) {
+        // if series not found - get full info, then save to db
+        newSeries.push(item);
+      }
+    }
+
+    // store in the db
+    await db.series.bulkDocs(newSeries);
+
+    return items;
+  }
 
   async search(query) {}
 
