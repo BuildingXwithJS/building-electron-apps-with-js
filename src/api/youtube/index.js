@@ -258,7 +258,53 @@ class Youtube {
     return items;
   }
 
-  async search(query) {}
+  async search(query) {
+    await this.isInited;
+
+    // clear old search results
+    const oldDocs = await db.search.allDocs();
+    await Promise.all(oldDocs.rows.map(row => db.search.remove(row.id, row.value.rev)));
+
+    // load search results
+    const data = await request(`${baseURL}/results?search_query=${encodeURIComponent(query)}`);
+    // create cheerio cursor
+    const $ = cheerio.load(data);
+    const fetchedChannels = [];
+    const matches = $('div.yt-lockup-tile')
+      .map((index, el) => {
+        const element = $(el);
+        // get title & url
+        const a = $('a.g-hovercard', element);
+        const title = a.text();
+        const _id = a.attr('href');
+        const url = `${baseURL}${_id}`;
+        // get image
+        const img = $('img', element);
+        const imageUrl = img.attr('src');
+        const imageThumb = img.attr('data-thumb');
+        const image = imageUrl.startsWith('/yts/img/pixel') ? imageThumb : imageUrl;
+        // make sure we're only showing channel once
+        if (fetchedChannels.indexOf(_id) !== -1) {
+          return undefined;
+        }
+        fetchedChannels.push(_id);
+        // return series data
+        return {
+          _id,
+          source: this.id,
+          title,
+          url,
+          image,
+          count: -1,
+        };
+      })
+      .get();
+
+    // store into search db
+    await db.search.bulkDocs(matches);
+
+    return matches;
+  }
 
   drawSettings() {
     const loggedIn = this.authCookies !== null;
