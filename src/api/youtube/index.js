@@ -3,12 +3,24 @@ import _ from 'lodash';
 import React from 'react';
 import request from 'request-promise-native';
 import cheerio from 'cheerio';
+import electron from 'electron';
 
 // our packages
 import db from '../../db';
 
 // base URL used for most requests
 const baseURL = 'http://youtube.com';
+const continueURL = 'https://www.youtube.com/signin?' +
+  'action_handle_signin=true&' +
+  'app=desktop&' +
+  'next=%2F&' +
+  'hl=en&' +
+  'feature=sign_in_button';
+const loginURL = 'https://accounts.google.com/ServiceLogin?' +
+  'passive=true&' +
+  'continue=' +
+  encodeURIComponent(continueURL) +
+  '&service=youtube&uilel=3&hl=en';
 
 // main module
 class Youtube {
@@ -17,6 +29,49 @@ class Youtube {
     this.id = 'youtube';
 
     this.isInited = this.init();
+  }
+
+  auth() {
+    if (this.authCookies !== null) {
+      // console.log('already authorized:', this.authCookies);
+      return;
+    }
+
+    // create new electron browser window
+    const remote = electron.remote;
+    const BrowserWindow = remote.BrowserWindow;
+    let win = new BrowserWindow({width: 800, height: 600});
+    // cleanup on close
+    win.on('closed', () => {
+      win = null;
+    });
+    // wait for page to finish loading
+    win.webContents.on('did-finish-load', () => {
+      // if auth was succesful
+      if (win.webContents.getURL() === 'https://www.youtube.com/') {
+        // get all cookies
+        win.webContents.session.cookies.get({}, async (error, cookies) => {
+          if (error) {
+            console.error('Error getting cookies:', error);
+            return;
+          }
+
+          // store cookies
+          this.authCookies = cookies.filter(c => c.domain.includes('youtube.com'));
+          await db.auth.put({_id: 'youtube', cookies: this.authCookies});
+
+          // close window
+          win.close();
+        });
+      }
+    });
+    // Load a crunchyroll login page
+    win.loadURL(loginURL);
+  }
+
+  async logout() {
+    await db.auth.remove(this.authCookies);
+    this.authCookies = null;
   }
 
   async init() {
@@ -32,11 +87,6 @@ class Youtube {
         this.authCookies = null;
       }
     }
-  }
-
-  async logout() {
-    await db.auth.remove(this.authCookies);
-    this.authCookies = null;
   }
 
   async getAllSeries() {
@@ -145,9 +195,28 @@ class Youtube {
   async search(query) {}
 
   drawSettings() {
+    const loggedIn = this.authCookies !== null;
+
     return (
-      <div className="card">
-        Youtube settings
+      <div key="youtube" className="card">
+        <header className="card-header">
+          <p className="card-header-title">
+            YouTube
+          </p>
+        </header>
+        <div className="card-content">
+          Youtube settings card.
+        </div>
+        <footer className="card-footer">
+          {loggedIn
+            ? <a className="card-footer-item" href="#crlogout" onClick={() => this.logout()}>
+                Logout
+              </a>
+            : <a className="card-footer-item" href="#crlogin" onClick={() => this.auth()}>
+                Login
+              </a>}
+        </footer>
+
       </div>
     );
   }

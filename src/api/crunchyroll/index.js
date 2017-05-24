@@ -346,7 +346,7 @@ class Crunchyroll {
     const loggedIn = this.authCookies !== null;
 
     return (
-      <div className="card">
+      <div key="crunchyroll" className="card">
         <header className="card-header">
           <p className="card-header-title">
             Crunchyroll
