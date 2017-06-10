@@ -1,7 +1,7 @@
 // npm packages
 import React from 'react';
-import {Link} from 'react-router-dom';
 // our packages
+import Chat from '../components/chat';
 import PluginManager from '../api';
 
 export default class Series extends React.Component {
@@ -25,6 +25,7 @@ export default class Series extends React.Component {
     }
 
     videojs('video', {
+      fluid: true,
       plugins: {
         ass: {
           src: file.subtitles,
@@ -54,7 +55,13 @@ export default class Series extends React.Component {
 
     if (episode && file) {
       body = (
-        <video id="video" className="video-js" controls autoPlay preload="auto">
+        <video
+          id="video"
+          className="video-js vjs-default-skin vjs-big-play-centered vjs-fluid"
+          controls
+          autoPlay
+          preload="auto"
+        >
           <source src={file.url} type={file.type} />
         </video>
       );
@@ -75,7 +82,12 @@ export default class Series extends React.Component {
           </div>
         </nav>
 
-        {body}
+        <div className="columns">
+          <div className="column">
+            {body}
+          </div>
+          <Chat episode={episode} />
+        </div>
       </div>
     );
   }
