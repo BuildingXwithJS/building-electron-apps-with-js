@@ -7,7 +7,7 @@ const app = express();
 // apply websockets to express
 setupWs(app);
 
-const clients = [];
+// chat sessions storage
 const chatSessions = {};
 
 // setup route
@@ -18,24 +18,37 @@ app.ws('/:series/:episode', (ws, req) => {
   const chatKey = series + episode;
 
   if (!chatSessions[chatKey]) {
-    chatSessions[chatKey] = [];
+    chatSessions[chatKey] = {
+      clients: [],
+      messages: [],
+    };
   }
+  // alias it
+  const session = chatSessions[chatKey];
 
   // assign index and store in memory db
   ws.uuid = clientId;
-  clients.push(ws);
+  session.clients.push(ws);
 
   ws.on('message', msg => {
     console.log(msg);
+    session.messages.push(msg);
+    session.clients.forEach(w => w.send(msg));
   });
 
   ws.on('close', () => {
-    const clientIndex = clients.findIndex(c => c.uuid === clientId);
-    clients.splice(clientIndex, 1);
-    console.log('Client disconnected:', clientId, clients);
+    const clientIndex = session.clients.findIndex(c => c.uuid === clientId);
+    session.clients.splice(clientIndex, 1);
+    console.log('Client disconnected:', clientId, session.clients);
+    if (session.clients.length === 0) {
+      session.messages = [];
+    }
   });
 
-  console.log('New connection for', series, episode, 'with client:', clientId, '\n', clients);
+  console.log('New connection for', series, episode, 'with client:', clientId, '\n', session.clients);
+  session.messages.forEach(msg => ws.send(msg));
 });
 
-app.listen(3000);
+app.listen(3000, () => {
+  console.log('listening on :3000');
+});

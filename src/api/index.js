@@ -5,4 +5,4 @@ import Youtube from './youtube';
 // manager
 import PluginManager from './manager';
 
-export default new PluginManager([Crunchyroll, Youtube]);
+export default new PluginManager([Crunchyroll]); //, Youtube]);
