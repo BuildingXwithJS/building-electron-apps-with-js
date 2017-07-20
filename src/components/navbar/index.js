@@ -25,7 +25,7 @@ export default () => (
     </div>
     <div className="nav-right nav-menu">
       <div className="nav-item">
-        <Link to="/settings" className="button">
+        <Link id="settings" to="/settings" className="button">
           <span className="icon">
             <i className="fa fa-cog" />
           </span>

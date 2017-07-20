@@ -346,7 +346,7 @@ class Crunchyroll {
     const loggedIn = this.authCookies !== null;
 
     return (
-      <div key="crunchyroll" className="card">
+      <div id="crunchyroll" key="crunchyroll" className="card">
         <header className="card-header">
           <p className="card-header-title">
             Crunchyroll
@@ -357,10 +357,10 @@ class Crunchyroll {
         </div>
         <footer className="card-footer">
           {loggedIn
-            ? <a className="card-footer-item" href="#crlogout" onClick={() => this.logout()}>
+            ? <a id="crLogout" className="card-footer-item" href="#crlogout" onClick={() => this.logout()}>
                 Logout
               </a>
-            : <a className="card-footer-item" href="#crlogin" onClick={() => this.auth()}>
+            : <a id="crLogin" className="card-footer-item" href="#crlogin" onClick={() => this.auth()}>
                 Login
               </a>}
         </footer>
