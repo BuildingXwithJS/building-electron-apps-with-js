@@ -9,7 +9,8 @@
   "scripts": {
     "start": "electron .",
     "lint": "eslint **/*.js",
-    "inspect-main": "electron-inspector"
+    "inspect-main": "electron-inspector",
+    "test": "mocha"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",
@@ -24,7 +25,9 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.10.3",
-    "prettier": "^0.22.0"
+    "mocha": "^3.4.2",
+    "prettier": "^0.22.0",
+    "spectron": "^3.7.2"
   },
   "dependencies": {
     "axios": "^0.16.1",
