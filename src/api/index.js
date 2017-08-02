@@ -1,6 +1,6 @@
 // plugins
-import Crunchyroll from './crunchyroll';
-import Youtube from './youtube';
+import Crunchyroll from './crunchyroll/index';
+import Youtube from './youtube/index';
 
 // manager
 import PluginManager from './manager';

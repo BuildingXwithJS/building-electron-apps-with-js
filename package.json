@@ -7,10 +7,12 @@
   "author": "Tim Ermilov <yamalight@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "electron .",
+    "start": "NODE_ENV=test electron .",
+    "production": "electron .",
     "lint": "eslint **/*.js",
     "inspect-main": "electron-inspector",
-    "test": "mocha"
+    "build": "rollup -c",
+    "test": "NODE_ENV=test mocha"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",
@@ -27,6 +29,8 @@
     "eslint-plugin-react": "^6.10.3",
     "mocha": "^3.4.2",
     "prettier": "^0.22.0",
+    "rollup": "^0.45.2",
+    "rollup-plugin-babel": "^2.7.1",
     "spectron": "^3.7.2"
   },
   "dependencies": {

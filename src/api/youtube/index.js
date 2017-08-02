@@ -5,7 +5,7 @@ import cheerio from 'cheerio';
 import electron from 'electron';
 
 // our packages
-import db from '../../db';
+import db from '../../db/index';
 
 // base URL used for most requests
 const baseURL = 'http://youtube.com';

@@ -3,7 +3,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 // our packages
-import PluginManager from '../api';
+import PluginManager from '../api/index';
 
 export default class Settings extends React.Component {
   constructor() {

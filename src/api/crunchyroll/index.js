@@ -6,9 +6,9 @@ import {M3U} from 'playlist-parser';
 import electron from 'electron';
 
 // our packages
-import db from '../../db';
+import db from '../../db/index';
 import parseXml from './parseXml';
-import decode from './subtitles';
+import decode from './subtitles/index';
 import bytesToAss from './subtitles/ass';
 import getSeries from './getSeries';
 

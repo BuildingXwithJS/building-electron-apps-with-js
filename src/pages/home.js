@@ -3,11 +3,11 @@ import _ from 'lodash';
 import React from 'react';
 import {Observable} from 'rxjs';
 // our packages
-import db from '../db';
-import PluginManager from '../api';
+import db from '../db/index';
+import PluginManager from '../api/index';
 // our components
-import Navbar from '../components/navbar';
-import Series from '../components/series';
+import Navbar from '../components/navbar/index';
+import Series from '../components/series/index';
 
 export default class Home extends React.Component {
   constructor() {

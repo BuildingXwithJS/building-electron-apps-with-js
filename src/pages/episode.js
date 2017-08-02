@@ -1,8 +1,8 @@
 // npm packages
 import React from 'react';
 // our packages
-import Chat from '../components/chat';
-import PluginManager from '../api';
+import Chat from '../components/chat/index';
+import PluginManager from '../api/index';
 
 export default class Series extends React.Component {
   constructor(props) {

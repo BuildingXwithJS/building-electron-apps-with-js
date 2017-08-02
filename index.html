@@ -19,7 +19,21 @@
   <script src="node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.min.js"></script>
   <script src="node_modules/videojs-ass/src/videojs.ass.js"></script>
   <script>
-    require('babel-register');
-    require('./src/index.js');
+    console.log(process.env.NODE_ENV);
+    if (process.env.NODE_ENV === 'test') {
+      require('babel-register')({
+        presets: [
+          ['env', {
+            targets: {
+              electron: 1.6
+            },
+          }],
+          'react',
+        ],
+      });
+      require('./src/index.js');
+    } else {
+      require('./dist/app.min.js');
+    }
   </script>
 </html>

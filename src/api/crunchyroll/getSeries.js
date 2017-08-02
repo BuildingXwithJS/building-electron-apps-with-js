@@ -5,7 +5,7 @@ import cheerio from 'cheerio';
 // base url
 const baseURL = 'http://www.crunchyroll.com';
 
-module.exports = async _id => {
+export default async _id => {
   // load catalogue
   const url = `${baseURL}${_id}`;
   const data = await request(url);

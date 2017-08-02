@@ -4,10 +4,10 @@ import React from 'react';
 import {Observable} from 'rxjs';
 import {Link} from 'react-router-dom';
 // our packages
-import db from '../db';
-import PluginManager from '../api';
+import db from '../db/index';
+import PluginManager from '../api/index';
 // our components
-import Episode from '../components/episode';
+import Episode from '../components/episode/index';
 
 export default class Series extends React.Component {
   constructor(props) {

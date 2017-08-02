@@ -3,7 +3,7 @@ import React from 'react';
 import {withRouter} from 'react-router-dom';
 
 // our packages
-import db from '../../db';
+import db from '../../db/index';
 
 export default withRouter(({series, history}) => {
   const openSeriesPage = async () => {
