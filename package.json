@@ -12,7 +12,7 @@
     "lint": "eslint **/*.js",
     "inspect-main": "electron-inspector",
     "build": "rollup -c",
-    "package": "electron-packager . bpjs-electron --no-prune --platform=darwin --arch=x64",
+    "package": "electron-packager . bpjs-electron --platform=darwin --arch=x64 --overwrite",
     "test": "NODE_ENV=test mocha"
   },
   "devDependencies": {
