@@ -3,6 +3,12 @@ const url = require('url');
 const path = require('path');
 const electron = require('electron');
 const {autoUpdater} = require('electron-updater');
+const log = require('electron-log');
+
+// configure logging
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 // Module to control application life.
 const app = electron.app;
@@ -14,9 +20,6 @@ const BrowserWindow = electron.BrowserWindow;
 let mainWindow;
 
 function createWindow() {
-  // trigger autoupdate check
-  autoUpdater.checkForUpdates();
-
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -33,7 +36,7 @@ function createWindow() {
   );
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -42,6 +45,9 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  // trigger autoupdate check
+  autoUpdater.checkForUpdates();
 }
 
 // This method will be called when Electron has finished
@@ -69,25 +75,32 @@ app.on('activate', function() {
 //-------------------------------------------------------------------
 // Auto updates
 //-------------------------------------------------------------------
+const sendStatusToWindow = (text) => {
+  log.info(text);
+  if (mainWindow) {
+    mainWindow.webContents.send('message', text);
+  }
+};
+
 autoUpdater.on('checking-for-update', () => {
-  console.log('Checking for update...');
+  sendStatusToWindow('Checking for update...');
 });
 autoUpdater.on('update-available', info => {
-  console.log('Update available.');
+  sendStatusToWindow('Update available.');
 });
 autoUpdater.on('update-not-available', info => {
-  console.log('Update not available.');
+  sendStatusToWindow('Update not available.');
 });
 autoUpdater.on('error', err => {
-  console.log('Error in auto-updater.');
+  sendStatusToWindow(`Error in auto-updater: ${err.toString()}`);
 });
 autoUpdater.on('download-progress', progressObj => {
-  console.log(
+  sendStatusToWindow(
     `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred} + '/' + ${progressObj.total} + )`
   );
 });
 autoUpdater.on('update-downloaded', info => {
-  console.log('Update downloaded; will install now');
+  sendStatusToWindow('Update downloaded; will install now');
 });
 
 autoUpdater.on('update-downloaded', info => {

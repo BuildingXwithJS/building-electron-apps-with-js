@@ -32,12 +32,6 @@ export default class Settings extends React.Component {
               </Link>
             </div>
           </div>
-
-          <div className="nav-right nav-menu">
-            <div className="nav-item">
-              I was updated
-            </div>
-          </div>
         </nav>
 
         <div className="content columns">

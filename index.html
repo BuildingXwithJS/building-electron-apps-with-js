@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>BPJS Electron</title>
+<head>
+  <meta charset="UTF-8">
+  <title>BPJS Electron</title>
 
-    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="node_modules/bulma/css/bulma.css">
-    <link rel="stylesheet" href="node_modules/video.js/dist/video-js.min.css">
-    <link rel="stylesheet" href="node_modules/libjass/libjass.css">
-    <link rel="stylesheet" href="node_modules/videojs-ass/src/videojs.ass.css">
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="node_modules/bulma/css/bulma.css">
+  <link rel="stylesheet" href="node_modules/video.js/dist/video-js.min.css">
+  <link rel="stylesheet" href="node_modules/libjass/libjass.css">
+  <link rel="stylesheet" href="node_modules/videojs-ass/src/videojs.ass.css">
+</head>
+<body>
+  <div id="app"></div>
+</body>
 
-  <script src="node_modules/video.js/dist/video.min.js"></script>
-  <script src="node_modules/libjass/libjass.min.js"></script>
-  <script src="node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.min.js"></script>
-  <script src="node_modules/videojs-ass/src/videojs.ass.js"></script>
-  <script>
-    console.log(process.env.NODE_ENV);
-    if (process.env.NODE_ENV === 'test') {
-      require('babel-register')({
-        presets: [
-          ['env', {
-            targets: {
-              electron: 1.6
-            },
-          }],
-          'react',
-        ],
-      });
-      require('./src/index.js');
-    } else {
-      require('./src/app.min.js');
-    }
-  </script>
+<script src="node_modules/video.js/dist/video.min.js"></script>
+<script src="node_modules/libjass/libjass.min.js"></script>
+<script src="node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.min.js"></script>
+<script src="node_modules/videojs-ass/src/videojs.ass.js"></script>
+<script>
+  // Listen for messages
+  const { ipcRenderer } = require('electron');
+  ipcRenderer.on('message', function (event, text) {
+    console.log('Message from updater:', text);
+  });
+
+  if (process.env.NODE_ENV === 'test') {
+    require('babel-register')({
+      presets: [
+        ['env', {
+          targets: {
+            electron: 1.6
+          },
+        }],
+        'react',
+      ],
+    });
+    require('./src/index.js');
+  } else {
+    require('./src/app.min.js');
+  }
+</script>
 </html>
