@@ -5,7 +5,7 @@ import {minify} from 'uglify-es';
 export default {
   entry: 'src/index.js',
   format: 'cjs',
-  dest: 'dist/app.min.js',
+  dest: 'src/app.min.js',
   plugins: [babel({exclude: 'node_modules/**'}), uglify({}, minify)],
   external: [
     'big-integer',

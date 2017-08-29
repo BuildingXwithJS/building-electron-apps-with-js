@@ -2,6 +2,7 @@
 const url = require('url');
 const path = require('path');
 const electron = require('electron');
+const {autoUpdater} = require('electron-updater');
 
 // Module to control application life.
 const app = electron.app;
@@ -13,6 +14,9 @@ const BrowserWindow = electron.BrowserWindow;
 let mainWindow;
 
 function createWindow() {
+  // trigger autoupdate check
+  autoUpdater.checkForUpdates();
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -62,5 +66,33 @@ app.on('activate', function() {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+//-------------------------------------------------------------------
+// Auto updates
+//-------------------------------------------------------------------
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for update...');
+});
+autoUpdater.on('update-available', info => {
+  console.log('Update available.');
+});
+autoUpdater.on('update-not-available', info => {
+  console.log('Update not available.');
+});
+autoUpdater.on('error', err => {
+  console.log('Error in auto-updater.');
+});
+autoUpdater.on('download-progress', progressObj => {
+  console.log(
+    `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred} + '/' + ${progressObj.total} + )`
+  );
+});
+autoUpdater.on('update-downloaded', info => {
+  console.log('Update downloaded; will install now');
+});
+
+autoUpdater.on('update-downloaded', info => {
+  // Wait 5 seconds, then quit and install
+  // In your application, you don't need to wait 500 ms.
+  // You could call autoUpdater.quitAndInstall(); immediately
+  autoUpdater.quitAndInstall();
+});

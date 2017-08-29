@@ -1,18 +1,29 @@
 {
   "name": "bpjs-electron",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "BPJS Electron app",
   "main": "index.js",
   "repository": "git@github.com:yamalight/bpjs-electron.git",
   "author": "Tim Ermilov <yamalight@gmail.com>",
   "license": "MIT",
+  "build": {
+    "appId": "com.bpjs.ElectronDemo",
+    "mac": {
+      "category": "com.bpjs.demo",
+      "target": [
+        "dmg"
+      ]
+    }
+  },
   "scripts": {
     "start": "NODE_ENV=test electron .",
     "production": "electron .",
     "lint": "eslint **/*.js",
     "inspect-main": "electron-inspector",
     "build": "rollup -c",
-    "package": "electron-packager . bpjs-electron --platform=darwin --arch=x64 --overwrite",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --x64",
+    "gh-publish": "electron-builder --x64 -p always",
     "test": "NODE_ENV=test mocha"
   },
   "devDependencies": {
@@ -21,7 +32,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-register": "^6.24.0",
     "electron": "^1.6.2",
-    "electron-packager": "^8.7.2",
+    "electron-builder": "^19.26.3",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-prettier": "^1.5.0",
@@ -42,6 +53,7 @@
     "big-integer": "^1.6.22",
     "bulma": "^0.4.0",
     "cheerio": "^0.22.0",
+    "electron-updater": "^2.8.7",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
     "playlist-parser": "^0.0.12",

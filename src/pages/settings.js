@@ -12,11 +12,9 @@ export default class Settings extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
-  componentWillUnmount() {
-  }
+  componentWillUnmount() {}
 
   render() {
     // const {series} = this.state;
@@ -32,6 +30,12 @@ export default class Settings extends React.Component {
                 </span>
                 <span>Back</span>
               </Link>
+            </div>
+          </div>
+
+          <div className="nav-right nav-menu">
+            <div className="nav-item">
+              I was updated
             </div>
           </div>
         </nav>
