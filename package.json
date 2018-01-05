@@ -13,7 +13,7 @@
     "inspect-main": "electron-inspector",
     "build": "rollup -c",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --x64 --mac",
+    "dist": "electron-builder -mwl",
     "gh-publish": "electron-builder --x64 --mac -p always",
     "test": "NODE_ENV=test mocha"
   },
